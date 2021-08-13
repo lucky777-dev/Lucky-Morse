@@ -1,0 +1,7 @@
+Hello, I am a test.
+I Love apples!
+(I have a dog & 10 birds)
+Can you give me 5$ please?
+My mail is "my@mail.net"
+A char error here: #
+Bye ;-)

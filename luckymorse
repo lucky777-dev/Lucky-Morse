@@ -1,0 +1,155 @@
+#!/usr/bin/python3
+#coding:utf-8
+
+import time
+import os
+import sys
+
+alpha = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+morseAlpha = [".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.."]
+alphaSpec = ["à", "ç", "é", "è", "ñ", " "]
+morseAlphaSpec = [".--.-", "-.-..", "..-..", ".-..-", "--.--", "/"]
+sign = [".", ",", "?", "'", "!", "/", "(", ")", "&", ":", ";", "=", "+", "-", "_", "\"", "$", "@"]
+morseSign = [".-.-.-", "--..--", "..--..", ".----.", "-.-.--", "-..-.", "-.--.", "-.--.-", ".-...", "---...", "-.-.-.", "-...-", ".-.-.", "-....-", "..--.-", ".-..-.", "...-..-", ".--.-."]
+digit = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+morseDigit = ["-----", ".----", "..---", "...--", "....-", ".....", "-....", "--...", "---..", "----."]
+
+def delSpaces(line):
+    while line[len(line) - 1] == ' ':
+        line = line[:-1]
+    return line
+
+def save(path, text):
+    with open(os.getcwd() + "/" + path, 'w') as file:
+        for i in range(len(text)):
+            file.write(text[i])
+            if i < len(text) - 1:
+                file.write('\n')
+    print(f"Done.\t[Text saved in '{path}']")
+
+def code(path):
+    text = []
+    coded = []
+    print(path + "\n")
+    with open(os.getcwd() + "/" + path, 'r') as file:
+        for line in file:
+            if line[len(line) - 1] == '\n':
+                line = line[:-1]
+            text.append(line.lower())
+            print(line.lower())
+    print()
+    for line in text:
+        cleanLine = delSpaces(line)
+        tmpLine = ""
+        for char in cleanLine:
+            if char in alpha:
+                tmpLine += morseAlpha[alpha.index(char)] + " "
+            elif char in alphaSpec:
+                tmpLine += morseAlphaSpec[alphaSpec.index(char)] + " "
+            elif char in sign:
+                tmpLine += morseSign[sign.index(char)] + " "
+            elif char in digit:
+                tmpLine += morseDigit[digit.index(char)] + " "
+            elif char == '\n':
+                pass
+            else:
+                tmpLine += char
+                print(f"ERROR: Can't code char '{char}'")
+
+        tmpLine = delSpaces(tmpLine)
+        coded.append(tmpLine)
+    print("\nCoded:")
+    for line in coded:
+        print(line)
+    print()
+    save(path + "-coded.txt", coded)
+    print()
+
+def decode(path):
+    text = []
+    decoded = []
+    print(path + "\n")
+    with open(os.getcwd() + "/" + path, 'r') as file:
+        for line in file:
+            if line[len(line) - 1] == '\n':
+                line = line[:-1]
+            text.append(line.lower())
+            print(line.lower())
+    print()
+    for line in text:
+        cleanLine = delSpaces(line)
+        tmpLine = ""
+        words = cleanLine.split(" / ")
+        for word in words:
+            tmpWord = ""
+            chars = word.split(" ")
+            for char in chars:
+                if char in morseAlpha:
+                    tmpWord += alpha[morseAlpha.index(char)]
+                elif char in morseAlphaSpec:
+                    tmpWord += alphaSpec[morseAlphaSpec.index(char)]
+                elif char in morseSign:
+                    tmpWord += sign[morseSign.index(char)]
+                elif char in morseDigit:
+                    tmpWord += digit[morseDigit.index(char)]
+                elif char == '\n':
+                    pass
+                else:
+                    tmpWord += char
+                    print(f"ERROR: Can't decode char '{char}'")
+            tmpLine += tmpWord + " "
+        tmpLine = delSpaces(tmpLine)
+        decoded.append(tmpLine)
+    print("\nCoded:")
+    for line in decoded:
+        print(line)
+    print()
+    save(path + "-decoded.txt", decoded)
+    print()
+        
+
+if __name__ == '__main__':
+    if sys.argv[1] == "-v" or sys.argv[1] == "--version":
+        print("luckymorse version 1.0")
+    elif sys.argv[1] == "-i" or sys.argv[1] == "--info":
+        print("Name:\t\tluckymorse\nVersion:\tv1.0\nLanguage:\tPython\nOS used:\tLinux Mint 20.2\nAuthor:\t\tLucky777")
+    elif sys.argv[1] == "-h" or sys.argv[1] == "--help":
+        print("Lucky-Morse help\n")
+        print("Use this software by typing:\n\t./luckymorse [mode] [file_path]")
+        print("Modes:")
+        print("\t[-h] [--help]\t  to get this help")
+        print("\t[-i] [--info]\t  to have more infos on this software")
+        print("\t[-c] [--code]\t  to code from alphabet to morse (require path)")
+        print("\t[-d] [--decode]\t  to decode from morse to alphabet (require path)")
+        print("\t[-v] [--version]  to get the current version of this software")
+        print("Path:")
+        print("\t[your_file.txt] the file to code/decode")
+        print("Example:")
+        print("\t./luckymorse -c example.txt\n\t\t(-> will code file 'example.txt' from alpha to morse)")
+        print("\t./luckymorse --decode /home/user/Documents/MORSE_MSG.txt\n\t\t(-> will decode file 'MORSE_MSG.txt' from morse to alpha)")
+        print("\nYou can put the file 'luckymorse' in '/usr/bin/' (sudo cp luckymorse /usr/bin)")
+        print("So you will be able to use luckymorse from everywhere by typing 'luckymorse' instead of './luckymorse'")
+    elif len(sys.argv) <= 2:
+        print("Argument error\nluckymorse [mode] [file_path]\nModes:\n\t[-c] or [--code]\n\t[-d] or [--decode]\nExample:\n\tluckymorse -c example.txt")
+    elif sys.argv[1] != "-c" and sys.argv[1] != "--code" and sys.argv[1] != "-d" and sys.argv[1] != "--decode":
+        print("Argument error\nluckymorse [mode] [file_path]\nModes:\n\t[-c] or [--code]\n\t[-d] or [--decode]\nExample:\n\tluckymorse -c example.txt")
+    elif not os.path.exists(sys.argv[2]) and not os.path.exists(os.getcwd() + "/" + sys.argv[2]):
+        print(f"Path error\nFile '{sys.argv[2]}' not found")
+    else:
+        mode = sys.argv[1]
+        if not os.path.exists(sys.argv[2]):
+            path = os.getcwd() + "/" + sys.argv[2]
+        else:
+            path = sys.argv[2]
+        tmp = []
+        with open(os.getcwd() + "/" + path, 'r') as file:
+            for line in file:
+                if line != "":
+                    tmp.append(line)
+        if len(tmp) == 0:
+            print(f"File '{os.getcwd()}/{sys.argv[2]}' is empty\nNothing to do")
+        else:
+            if mode == "-c" or mode == "--code":
+                code(path)
+            elif mode == "-d" or mode == "--decode":
+                decode(path)
