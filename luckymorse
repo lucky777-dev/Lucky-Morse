@@ -109,7 +109,9 @@ def decode(path):
         
 
 if __name__ == '__main__':
-    if sys.argv[1] == "-v" or sys.argv[1] == "--version":
+    if len(sys.argv) == 1:
+        print("Argument error (-h for help)\n\tluckymorse [mode] [file_path]")
+    elif sys.argv[1] == "-v" or sys.argv[1] == "--version":
         print("luckymorse version 1.0")
     elif sys.argv[1] == "-i" or sys.argv[1] == "--info":
         print("Name:\t\tluckymorse\nVersion:\tv1.0\nLanguage:\tPython\nOS used:\tLinux Mint 20.2\nAuthor:\t\tLucky777")
@@ -127,7 +129,7 @@ if __name__ == '__main__':
         print("Example:")
         print("\t./luckymorse -c example.txt\n\t\t(-> will code file 'example.txt' from alpha to morse)")
         print("\t./luckymorse --decode /home/user/Documents/MORSE_MSG.txt\n\t\t(-> will decode file 'MORSE_MSG.txt' from morse to alpha)")
-        print("\nYou can put the file 'luckymorse' in '/usr/bin/' (sudo cp luckymorse /usr/bin)")
+        print("\nYou can put the file 'luckymorse' in '/usr/bin/' (sudo cp luckymorse /usr/bin/)")
         print("So you will be able to use luckymorse from everywhere by typing 'luckymorse' instead of './luckymorse'")
     elif len(sys.argv) <= 2:
         print("Argument error\nluckymorse [mode] [file_path]\nModes:\n\t[-c] or [--code]\n\t[-d] or [--decode]\nExample:\n\tluckymorse -c example.txt")
